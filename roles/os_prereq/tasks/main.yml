@@ -1,0 +1,15 @@
+- name: "os_prereq: install podman"
+  package:
+    name: @container-tool
+    state: present
+
+- name: "os_prereq: install jq"
+  package:
+    name: jq
+    state: present
+
+- name: "os_prereq: install wget"
+  package:
+    name: wget
+    state: present
+

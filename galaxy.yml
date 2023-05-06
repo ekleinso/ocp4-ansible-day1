@@ -1,0 +1,21 @@
+namespace: ibmce
+name: ocp_day1
+version: 1.0.0
+readme: README.md
+authors:
+  - Eric Kleinsorgen <emk@us.ibm.com>
+description: Day 1 Ansible Collection
+license:
+  - EPL-2.0
+tags:
+  - ibmce
+  - rhocp
+  - day1
+dependencies:
+  "community.general": ">=5.6.0"
+repository: https://github.com/ekleinso/ocp4-ansible-day1
+documentation: https://github.com/ekleinso/ocp4-ansible-day1
+homepage: https://github.com/ekleinso/ocp4-ansible-day1
+issues: https://github.com/ekleinso/ocp4-ansible-day1/issues
+build_ignore: []
+
