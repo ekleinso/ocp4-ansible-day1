@@ -1,0 +1,7 @@
+---
+- name: Deploy day1
+  gather_facts: no
+  hosts: localhost
+
+  roles:
+   - ibmce.ocp_day1.os_prereq

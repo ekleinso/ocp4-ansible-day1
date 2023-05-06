@@ -1,6 +1,6 @@
 - name: "os_prereq: install podman"
-  package:
-    name: @container-tool
+  yum:
+    name: "@container-tool"
     state: present
 
 - name: "os_prereq: install jq"
