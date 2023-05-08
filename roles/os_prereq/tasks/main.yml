@@ -23,3 +23,7 @@
     name: bind-utils
     state: present
 
+- name: "install python3-firewalld"
+  pip:
+    name: firewalld
+    executable: /usr/bin/pip3
