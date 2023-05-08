@@ -1,0 +1,4 @@
+---
+# defaults file for httpd
+
+httpd_port: "{{ lookup('env', 'HTTPD_PORT') | default('8080', true) }}"
