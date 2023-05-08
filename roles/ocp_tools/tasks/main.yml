@@ -1,23 +1,30 @@
-- name: "Download {{ item }}"
+- name: "Download clients"
   get_url:
     url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-{{ ocp_version }}/{{ item }}"
     dest: "/tmp/{{ item }}"
     mode: '0644'
   with_items: "{{ ocp_clients }}"
 
-- name: "Extract {{ item }} into /usr/local/bin"
+- name: "Extract into /usr/local/bin"
   ansible.builtin.unarchive:
     src: "/tmp/{{ item }}"
     dest: /usr/local/bin
   with_items: "{{ ocp_clients }}"
 
-- name: "Remove file /tmp/{{ item }}"
+- name: Change permissions for oc-mirror
+  ansible.builtin.file:
+    path: /usr/local/bin/oc-mirror
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "Remove file"
   ansible.builtin.file:
     path: "/tmp/{{ item }}"
     state: absent
   with_items: "{{ ocp_clients }}"
 
-- name: "Download dependencies {{ item }}"
+- name: "Download dependencies"
   get_url:
     url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/{{ ocp_version }}/latest/{{ item }}"
     dest: "/var/www/html"
