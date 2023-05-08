@@ -23,8 +23,8 @@
     state: enabled
     immediate: true
     permanent: true
-    vars:
-      ansible_python_interpreter: /usr/bin/python3.6
+  vars:
+    ansible_python_interpreter: /usr/bin/python3.6
   register: ports_added_to_firewalld
 
 - name: print Ports Added
