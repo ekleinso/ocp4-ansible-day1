@@ -30,3 +30,30 @@
     dest: "/var/www/html"
     mode: '0644'
   with_items: "{{ ocp_deps }}"
+
+- name: "Download ibm_pak"
+  get_url:
+    url: "{{ ibm_pak }}"
+    dest: "/tmp/oc-ibm_pak-linux-amd64.tar.gz"
+    mode: '0644'
+
+- name: "Extract into /usr/local/bin"
+  ansible.builtin.unarchive:
+    src: "/tmp/oc-ibm_pak-linux-amd64.tar.gz"
+    dest: /usr/local/bin
+
+- name: "Rename oc-ibm_pak-linux-amd64 oc-ibm_pak"
+  command: mv /usr/local/bin/oc-ibm_pak-linux-amd64 /usr/local/bin/oc-ibm_pak
+
+- name: Change permissions for oc-mirror
+  ansible.builtin.file:
+    path: /usr/local/bin/oc-ibm_pak
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "Remove file /tmp/oc-ibm_pak-linux-amd64.tar.gz"
+  ansible.builtin.file:
+    path: "/tmp/oc-ibm_pak-linux-amd64.tar.gz"
+    state: absent
+
