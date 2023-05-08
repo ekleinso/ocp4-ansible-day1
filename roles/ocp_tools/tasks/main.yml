@@ -1,0 +1,25 @@
+- name: "Download {{ item }}"
+  get_url:
+    url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-{{ ocp_version }}/{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: '0644'
+  with_items: "{{ ocp_clients }}"
+
+- name: "Extract {{ item }} into /usr/local/bin"
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ item }}"
+    dest: /usr/local/bin
+  with_items: "{{ ocp_clients }}"
+
+- name: "Remove file /tmp/{{ item }}"
+  ansible.builtin.file:
+    path: "/tmp/{{ item }}"
+    state: absent
+  with_items: "{{ ocp_clients }}"
+
+- name: "Download dependencies {{ item }}"
+  get_url:
+    url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/{{ ocp_version }}/latest/{{ item }}"
+    dest: "/var/www/html"
+    mode: '0644'
+  with_items: "{{ ocp_deps }}"
