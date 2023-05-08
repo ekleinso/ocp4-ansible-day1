@@ -23,7 +23,3 @@
     name: bind-utils
     state: present
 
-#- name: "install python3-firewall"
-#  pip:
-#    name: firewall
-#    executable: /usr/bin/pip3

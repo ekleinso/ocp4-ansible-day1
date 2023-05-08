@@ -1,6 +1,6 @@
 ---
 - name: Deploy day1
-  gather_facts: no
+  gather_facts: yes
   hosts: localhost
 
   roles:

@@ -3,3 +3,5 @@
 
 mirror_registry_package: "{{ lookup('env', 'MIRROR_REGISTRY_PACKAGE') | default('https://mirror.openshift.com/pub/openshift-v4/clients/mirror-registry/latest/mirror-registry.tar.gz', true) }}"
 mirror_registry_path: "{{ lookup('env', 'MIRROR_REGISTRY_PATH') | default('/opt/mirror-registry', true) }}"
+mirror_registry_user: "{{ lookup('env', 'MIRROR_REGISTRY_USER') | default('admin', true) }}"
+mirror_registry_password: "{{ lookup('env', 'MIRROR_REGISTRY_PASSWORD') | default('Passw0rd', true) }}"
