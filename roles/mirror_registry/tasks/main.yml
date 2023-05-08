@@ -44,5 +44,5 @@
       - "Mirror-registry .............. https://{{ ansible_nodename }}:8443"
       - "User ......................... {{ mirror_registry_user }}"
       - "Password ..................... {{ mirror_registry_password }}"
-      - "Certificate .................. {{ lookup('file', mirror_registry_path + '/quay/quay-rootCA/rootCA.pem') }}"
+      - "Certificate .................. {{ mirror_registry_path }}/quay/quay-rootCA/rootCA.pem }}"
 
