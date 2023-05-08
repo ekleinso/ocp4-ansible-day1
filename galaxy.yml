@@ -13,6 +13,7 @@ tags:
   - day1
 dependencies:
   "community.general": ">=5.6.0"
+  "ansible.posix": ">=1.5.1"
 repository: https://github.com/ekleinso/ocp4-ansible-day1
 documentation: https://github.com/ekleinso/ocp4-ansible-day1
 homepage: https://github.com/ekleinso/ocp4-ansible-day1
