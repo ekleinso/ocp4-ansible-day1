@@ -5,3 +5,4 @@
 
   roles:
    - ibmce.ocp_day1.os_prereq
+   - ibmce.ocp_day1.httpd

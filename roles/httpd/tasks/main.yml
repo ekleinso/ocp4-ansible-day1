@@ -1,19 +1,30 @@
-- name: "httpd: install httpd"
+- name: "install httpd"
   yum:
     name: "httpd"
     state: present
 
-- name: "httpd: Ensure the default Apache port is {{ httpd_port }}"
+- name: "Ensure the default Apache port is {{ httpd_port }}"
   ansible.builtin.lineinfile:
     path: /etc/httpd/conf/httpd.conf
     regexp: '^Listen '
     insertafter: '^#Listen '
     line: Listen {{ httpd_port }}
 
-- name: "enable httpd service"
+- name: "enable/start httpd service"
   systemd:
     name: httpd
     enabled: yes
     masked: no
     state: started
 
+- name: Add ports to firewall
+  firewalld:
+    port: "{{ httpd_port }}/tcp"
+    state: enabled
+    immediate: true
+    permanent: true
+  register: ports_added_to_firewalld
+
+- name: print Ports Added
+  debug:
+    var: ports_added_to_firewalld

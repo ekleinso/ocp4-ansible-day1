@@ -1,15 +1,25 @@
-- name: "os_prereq: install podman"
+- name: "install podman"
   yum:
     name: "@container-tools"
     state: present
 
-- name: "os_prereq: install jq"
+- name: "install jq"
   package:
     name: jq
     state: present
 
-- name: "os_prereq: install wget"
+- name: "install wget"
   package:
     name: wget
+    state: present
+
+- name: "install net-tools"
+  package:
+    name: net-tools
+    state: present
+
+- name: "install bind-utils"
+  package:
+    name: bind-utils
     state: present
 
