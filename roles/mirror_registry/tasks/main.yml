@@ -21,6 +21,7 @@
 
 - name: "Install mirror-registry"
   command: "./mirror-registry install --initUser admin --initPassword Passw0rd --quayHostname {{ ansible_nodename }} --quayRoot {{ mirror_registry_path }}/quay"
+  args:
     chdir: "{{ mirror_registry_path }}"
 
 - name: Add ports to firewall
