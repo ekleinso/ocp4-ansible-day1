@@ -31,6 +31,6 @@
   debug:
     msg:
       - "rhcos ................. {{ jsondata }}"
-#      - "RELEASE ............... {{ rhcos.content.architectures.x86_64.artifacts.metal.release }}"
-#      - "Live ISO .............. {{ rhcos.content.architectures.x86_64.artifacts.metal.formats.iso.disk.location }}"
+      - "RELEASE ............... {{ jsondata.architectures.x86_64.artifacts.metal.release }}"
+      - "Live ISO .............. {{ jsondata.architectures.x86_64.artifacts.metal.formats.iso.disk.location }}"
 
