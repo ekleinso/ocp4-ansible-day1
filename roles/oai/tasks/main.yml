@@ -5,11 +5,11 @@
 - name: "OpenShift Assisted Installer details"
   debug:
     msg:
-      - "COMMIT_ID .............. {{ commit_id }}"
+      - "COMMIT_ID .............. {{ commit_id.stdout }}"
 
 - name: "OpenShift Details"
   uri:
-    url: "https://raw.githubusercontent.com/openshift/installer/{{ commit_id }}/data/data/coreos/rhcos.json | jq '.architectures.x86_64.artifacts.metal"
+    url: "https://raw.githubusercontent.com/openshift/installer/{{ commit_id.stdout }}/data/data/coreos/rhcos.json | jq '.architectures.x86_64.artifacts.metal"
     method: GET
     return_content: yes
     status_code: 200
