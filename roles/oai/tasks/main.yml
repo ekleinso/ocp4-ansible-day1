@@ -16,6 +16,7 @@
 - name: "OpenShift RHCOS details"
   debug:
     msg:
-      - "RELEASE ............... {{ rhcos.architectures.x86_64.artifacts.metal.release }}"
-      - "Live ISO .............. {{ rhcos.architectures.x86_64.artifacts.metal.formats.iso.disk.location }}"
+      - "rhcos ................. {{ rhcos }}"
+#      - "RELEASE ............... {{ rhcos.architectures.x86_64.artifacts.metal.release }}"
+#      - "Live ISO .............. {{ rhcos.architectures.x86_64.artifacts.metal.formats.iso.disk.location }}"
 
