@@ -10,10 +10,7 @@
 - name: "OpenShift Details"
   uri:
     url: "https://raw.githubusercontent.com/openshift/installer/{{ commit_id.stdout }}/data/data/coreos/rhcos.json"
-    method: GET
-    return_content: yes
-    status_code: 200
-    body_format: json
+    return_content: true
   register: rhcos
 
 - name: "OpenShift RHCOS details"
