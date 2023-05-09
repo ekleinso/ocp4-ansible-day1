@@ -9,7 +9,7 @@
 
 - name: "OpenShift Details"
   uri:
-    url: "https://raw.githubusercontent.com/openshift/installer/{{ commit_id.stdout }}/data/data/coreos/rhcos.json"
+    url: https://raw.githubusercontent.com/openshift/installer/{{ commit_id.stdout }}/data/data/coreos/rhcos.json
     return_content: true
   register: rhcos
 
