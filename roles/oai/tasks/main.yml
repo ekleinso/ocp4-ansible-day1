@@ -1,5 +1,5 @@
 - name: "Get OpenShift COMMIT_ID"
-  command: "openshift-install version | grep '^built from commit' | awk '{print $4}'"
+  shell: "openshift-install version | grep '^built from commit' | awk '{print $4}'"
   register: commit_id
 
 - name: "OpenShift Assisted Installer details"
