@@ -1,0 +1,24 @@
+- name: "Get OpenShift COMMIT_ID"
+  command: "openshift-install version | grep '^built from commit' | awk '{print $4}'"
+  register: commit_id
+
+- name: "OpenShift Assisted Installer details"
+  debug:
+    msg:
+      - "COMMIT_ID .............. {{ commit_id }}"
+
+- name: "OpenShift Details"
+  uri:
+    url: "https://raw.githubusercontent.com/openshift/installer/{{ commit_id }}/data/data/coreos/rhcos.json | jq '.architectures.x86_64.artifacts.metal"
+    method: GET
+    return_content: yes
+    status_code: 200
+    body_format: json
+  register: rhcos
+
+- name: "OpenShift RHCOS details"
+  debug:
+    msg:
+      - "RELEASE ............... {{ rhcos.architectures.x86_64.artifacts.metal.release }}"
+      - "Live ISO .............. {{ rhcos.architectures.x86_64.artifacts.metal.formats.iso.disk.location }}"
+

@@ -19,20 +19,20 @@
     path: "{{ mirror_registry_path }}/mirror-registry.tar.gz"
     state: absent
 
-#- name: "Install mirror-registry"
-#  command: "./mirror-registry install --initUser {{ mirror_registry_user }} --initPassword {{ mirror_registry_password }} --quayHostname {{ ansible_nodename }} --quayRoot {{ mirror_registry_path }}/quay"
-#  args:
-#    chdir: "{{ mirror_registry_path }}"
+- name: "Install mirror-registry"
+  command: "./mirror-registry install --initUser {{ mirror_registry_user }} --initPassword {{ mirror_registry_password }} --quayHostname {{ ansible_nodename }} --quayRoot {{ mirror_registry_path }}/quay"
+  args:
+    chdir: "{{ mirror_registry_path }}"
 
-#- name: Add ports to firewall
-#  firewalld:
-#    port: "8443/tcp"
-#    state: enabled
-#    immediate: true
-#    permanent: true
-#  vars:
-#    ansible_python_interpreter: /usr/bin/python3.6
-#  register: ports_added_to_firewalld
+- name: Add ports to firewall
+  firewalld:
+    port: "8443/tcp"
+    state: enabled
+    immediate: true
+    permanent: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3.6
+  register: ports_added_to_firewalld
 
 - name: "Ports Added"
   debug:

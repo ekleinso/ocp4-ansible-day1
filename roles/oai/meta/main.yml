@@ -1,0 +1,21 @@
+galaxy_info:
+  author: Eric Kleinsorgen (@emk)
+  description: Role to install OpenShift Assisted Installer
+
+  license: EPL-2.0
+
+  min_ansible_version: 2.10
+
+  platforms:
+    - name: GenericLinux
+      versions:
+        - all
+
+  galaxy_tags:
+    - ibmce
+    - ansible
+    - ocp
+    - day1
+
+dependencies: []
+
