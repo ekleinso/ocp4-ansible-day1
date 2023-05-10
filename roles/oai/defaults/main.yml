@@ -1,4 +1,3 @@
 ---
 # defaults file for httpd
-
 oai_openshift_version: "{{ lookup('env', 'OAI_OPENSHIFT_VERSION') | default('4.10.58', true) }}"

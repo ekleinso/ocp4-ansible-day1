@@ -2,10 +2,16 @@
   shell: "openshift-install version | grep '^built from commit' | awk '{print $4}'"
   register: commit_id
 
+- name: "Get OpenShift Version"
+  shell: "openshift-install version | grep '^openshift-install' | awk '{print $2}'"
+  register: openshift_version
+
 - name: "OpenShift Assisted Installer details"
   debug:
     msg:
       - "COMMIT_ID .............. {{ commit_id.stdout }}"
+      - "OpenShift Version ...... {{ openshift_version.stdout }}"
+      - "OpenShift Major ........ {{ openshift_version.stdout.split('.')[:2] | join('.') }}"
 
 - name: "rhcos.json"
   get_url:
@@ -17,9 +23,39 @@
   shell: cat /tmp/rhcos.json
   register: result
 
-- name: save the Json data to a Variable as a Fact
+- name: save the result data to a Variable as a Fact
   set_fact:
     jsondata: "{{ result.stdout }}"
+
+- name: parse the Json data to a Variable as a Fact
+  set_fact:
+    rhcos_release: "{{ jsondata.architectures.x86_64.artifacts.metal.release }}"
+    live_iso: "{{ jsondata.architectures.x86_64.artifacts.metal.formats.iso.disk.location }}"
+    ocp_major: "{{ openshift_version.stdout.split('.')[:2] | join('.') }}"
+    ocp_minor: "{{ openshift_version.stdout }}"
+
+- name: parse the Json data to a Variable as a Fact
+  set_fact:
+    os_images: 
+      - {
+          "openshift_version": "{{ ocp_major }}",
+          "cpu_architecture": "x86_64",
+          "url": "{{ live_iso }}",
+          "version": "{{ rhcos_release }}"
+        }
+
+- name: parse the Json data to a Variable as a Fact
+  set_fact:
+    os_releases: 
+      - {
+          "openshift_version": "{{ ocp_major }}",
+          "cpu_architecture": "x86_64",
+          "cpu_architectures": [
+            "x86_64"
+          ],
+          "url": "quay.io/openshift-release-dev/ocp-release:{{ ocp_minor }}-x86_64",
+          "version": "{{ ocp_minor }}"
+        }
 
 #- name: "OpenShift Details"
 #  uri:
@@ -30,7 +66,11 @@
 - name: "OpenShift RHCOS details"
   debug:
     msg:
-      - "rhcos ................. {{ jsondata }}"
-      - "RELEASE ............... {{ jsondata.architectures.x86_64.artifacts.metal.release }}"
-      - "Live ISO .............. {{ jsondata.architectures.x86_64.artifacts.metal.formats.iso.disk.location }}"
+      - "RELEASE ............... {{ rhcos_release }}"
+      - "Live ISO .............. {{ live_iso }}"
+      - "{{ os_images|to_json(ensure_ascii=false) }}"
 
+- name: Template a file to /tmp/configmap.yaml
+  ansible.builtin.template:
+    src: configmap.yaml.j2
+    dest: /tmp/configmap.yaml
