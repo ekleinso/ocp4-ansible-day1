@@ -8,22 +8,14 @@
 
 - name: parse the Json data to a Variable as a Fact
   set_fact:
-    registry_auth:
-      - {
-           "auths": {
-             "{{ ansible_default_ipv4.address }}:8443": { 
-               "auth": "{{ (mirror_registry_user + ':' + mirror_registry_password) | b64encode }}", 
-               "email": "admin@example.com"
-             }
-           }
-        } 
+    registry_auth: "{{ lookup('template', 'registry_auth.json.j2') }}"
 
 - name: "Mirror json"
   debug:
     msg:
       - "pull-secret ............ {{ pull_secret }}"
       - "registry auth .......... {{ registry_auth }}"
-      - "merge .................. {{ pull_secret | combine(registry_auth) }}"
+      - "merge .................. {{ pull_secret | combine(registry_auth | items2dict) }}"
 
 #- name: "Install mirror-registry"
 #  command: "./mirror-registry install --initUser {{ mirror_registry_user }} --initPassword {{ mirror_registry_password }} --quayHostname {{ ansible_nodename }} --quayRoot {{ mirror_registry_path }}/quay"
