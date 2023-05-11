@@ -1,3 +1,8 @@
+- name: "Create directory for OpenShift Assisted Installer"
+  file:
+    path: "{{ oai_path }}"
+    state: directory
+
 - name: "Get OpenShift COMMIT_ID"
   shell: "openshift-install version | grep '^built from commit' | awk '{print $4}'"
   register: commit_id
@@ -16,11 +21,11 @@
 - name: "rhcos.json"
   get_url:
     url: "https://raw.githubusercontent.com/openshift/installer/{{ commit_id.stdout }}/data/data/coreos/rhcos.json"
-    dest: "/tmp/rhcos.json"
+    dest: "{{ oai_path }}/rhcos.json"
     mode: '0644'
 
 - name: Display the JSON file content
-  shell: cat /tmp/rhcos.json
+  shell: "cat {{ oai_path }}/rhcos.json
   register: result
 
 - name: save the result data to a Variable as a Fact
@@ -43,6 +48,18 @@
           "url": "{{ live_iso }}",
           "version": "{{ rhcos_release }}"
         }
+  when: oai_disconnected == "false"
+
+- name: parse the Json data to a Variable as a Fact
+  set_fact:
+    os_images: 
+      - {
+          "openshift_version": "{{ ocp_major }}",
+          "cpu_architecture": "x86_64",
+          "url": "http://{{ ansible_default_ipv4.address }}:8080/rhcos-live.x86_64.iso",
+          "version": "{{ rhcos_release }}"
+        }
+  when: oai_disconnected == "true"
 
 - name: parse the Json data to a Variable as a Fact
   set_fact:
@@ -56,21 +73,48 @@
           "url": "quay.io/openshift-release-dev/ocp-release:{{ ocp_minor }}-x86_64",
           "version": "{{ ocp_minor }}"
         }
+  when: oai_disconnected == "false"
 
-#- name: "OpenShift Details"
-#  uri:
-#    url: https://raw.githubusercontent.com/openshift/installer/{{ commit_id.stdout }}/data/data/coreos/rhcos.json
-#    return_content: true
-#  register: rhcos
+- name: parse the Json data to a Variable as a Fact
+  set_fact:
+    os_releases: 
+      - {
+          "openshift_version": "{{ ocp_major }}",
+          "cpu_architecture": "x86_64",
+          "cpu_architectures": [
+            "x86_64"
+          ],
+          "url": "{{ ansible_default_ipv4.address }}:8443/ocp4/openshift4:{{ ocp_minor }}-x86_64",
+          "version": "{{ ocp_minor }}"
+        }
+  when: oai_disconnected == "true"
 
 - name: "OpenShift RHCOS details"
   debug:
     msg:
       - "RELEASE ............... {{ rhcos_release }}"
       - "Live ISO .............. {{ live_iso }}"
-      - "{{ os_images|to_json(ensure_ascii=false) }}"
 
-- name: Template a file to /tmp/configmap.yaml
+- name: "Template a file to {{ oai_path }}/configmap.yml"
   ansible.builtin.template:
     src: configmap.yaml.j2
-    dest: /tmp/configmap.yaml
+    dest: "{{ oai_path }}/configmap.yml
+  when: oai_disconnected == "false"
+
+- name: "Template a file to {{ oai_path }}/configmap.yml"
+  ansible.builtin.template:
+    src: configmap-disconnected.yaml.j2
+    dest: "{{ oai_path }}/configmap.yml
+  when: oai_disconnected == "true"
+
+- name: "Template a file to {{ oai_path }}/pod.yml"
+  ansible.builtin.template:
+    src: pod.yaml.j2
+    dest: "{{ oai_path }}/pod.yml
+  when: oai_disconnected == "false"
+
+- name: "Template a file to {{ oai_path }}/pod.yml"
+  ansible.builtin.template:
+    src: pod-disconnected.yaml.j2
+    dest: "{{ oai_path }}/pod.yml
+  when: oai_disconnected == "true"

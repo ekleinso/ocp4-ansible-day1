@@ -42,6 +42,10 @@ spec:
         name: ai-data
       - mountPath: /etc/containers
         name: mirror-registry-config
+      - mountPath: /etc/pki/ca-trust/extracted/pem
+        subPath: tls-ca-bundle.pem
+        name: mirror-registry-config
+  restartPolicy: Never
   volumes:
     - name: ai-data
       persistentVolumeClaim:
@@ -49,4 +53,12 @@ spec:
     - name: pg-data
       persistentVolumeClaim:
         claimName: ai-db-data
-  restartPolicy: Never
+    - name: mirror-registry-config
+      configMap:
+        name: config
+        deafultMode: 420
+        items:
+          - key: registries.conf
+            path: registries.conf
+          - key: tls-ca-bundle.pem
+            path: tls-ca-bundle.pem

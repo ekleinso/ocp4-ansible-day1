@@ -1,18 +1,6 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "{{ etcd_backup_configmap }}"
-  namespace: "{{ etcd_backup_namespace }}"
-data:
-  etcd-backup.sh: {{ lookup('file', 'etcd-backup.sh') | to_json }}
-  etcd-snapshot-backup-disconnected.sh: {{ lookup('file', etcd_backup_script) | to_json }}
-
-
-
-
-apiVersion: v1
-kind: ConfigMap
-metadata:
   name: config
 data:
   ASSISTED_SERVICE_HOST: 127.0.0.1:8090
@@ -33,18 +21,18 @@ data:
   ISO_IMAGE_TYPE: "full-iso"
   LISTEN_PORT: "8888"
   NTP_DEFAULT_SERVER: ""
-  OS_IMAGES: '[{"openshift_version":"4.10","cpu_architecture":"x86_64","url":"http://<IP address of iso mirror>/pub/openshift-v4/dependencies/rhcos/4.10/4.10.16/rhcos-4.10.16-x86_64-live.x86_64.iso","version":"410.84.202205191234-0"}]'
+  OS_IMAGES: '{{ os_images | to_json }}'
   POSTGRESQL_DATABASE: installer
   POSTGRESQL_PASSWORD: admin
   POSTGRESQL_USER: admin
   PUBLIC_CONTAINER_REGISTRIES: 'quay.io'
-  RELEASE_IMAGES: '[{"openshift_version":"4.10","cpu_architecture":"x86_64","cpu_architectures":["x86_64"],"url":"<container image registry server:port>/ocp4/openshift4:4.10.22-x86_64","version":"4.10.22","default":true}]'
+  RELEASE_IMAGES: '{{ os_releases | to_json }}'
   SERVICE_BASE_URL: "http://{{ ansible_default_ipv4.address }}:8090"
   STORAGE: filesystem
   ENABLE_UPGRADE_AGENT: "false"
-  AGENT_DOCKER_IMAGE: "<container image registry server:port>/edge-infrastructure/assisted-installer-agent:latest"
-  CONTROLLER_IMAGE: "<container image registry server:port>/edge-infrastructure/assisted-installer-controller:latest"
-  INSTALLER_IMAGE: "<container image registry server:port>/edge-infrastructure/assisted-installer:latest"
+  AGENT_DOCKER_IMAGE: "{{ ansible_default_ipv4.address }}:8443/edge-infrastructure/assisted-installer-agent:latest"
+  CONTROLLER_IMAGE: "{{ ansible_default_ipv4.address }}:8443/edge-infrastructure/assisted-installer-controller:latest"
+  INSTALLER_IMAGE: "{{ ansible_default_ipv4.address }}:8443/edge-infrastructure/assisted-installer:latest"
 
   registries.conf: |
     unqualified-search-registries = ["registry.access.redhat.com", "docker.io"]
@@ -53,15 +41,14 @@ data:
         location = "quay.io/openshift-release-dev/ocp-release"
         mirror-by-digest-only = true
         [[registry.mirror]]
-        location = "<container image registry server:port>/ocp4/openshift4"
+        location = "{{ ansible_default_ipv4.address }}:8443>/ocp4/openshift4"
     [[registry]]
         prefix = ""
         location = "quay.io/openshift-release-dev/ocp-v4.0-art-dev"
         mirror-by-digest-only = true
         [[registry.mirror]]
-        location = "<container image registry server:port>/ocp4/openshift4"
+        location = "{{ ansible_default_ipv4.address }}:8443/ocp4/openshift4"
   tls-ca-bundle.pem: |
-    -----BEGIN CERTIFICATE-----
-    <your cert goes here>
-    -----END CERTIFICATE-----
-
+{% filter indent(width=4) %}
+    {{ lookup('file', oai_registry_certificate) }}
+{% endfilter %}

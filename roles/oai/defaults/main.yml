@@ -1,3 +1,5 @@
 ---
 # defaults file for httpd
-oai_openshift_version: "{{ lookup('env', 'OAI_OPENSHIFT_VERSION') | default('4.10.58', true) }}"
+oai_disconnected: "{{ lookup('env', 'OAI_DISCONNECTED') | default('false', true) }}"
+oai_registry_certificate: "{{ lookup('env', 'OAI_REGISTRY_CERTIFICATE') | default('/opt/mirror-registry/quay/quay-rootCA/rootCA.pem', true) }}"
+oai_path: "{{ lookup('env', 'OAI_PATH') | default('/opt/oai', true) }}"
