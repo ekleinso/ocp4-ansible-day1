@@ -25,7 +25,7 @@
     mode: '0644'
 
 - name: Display the JSON file content
-  shell: "cat {{ oai_path }}/rhcos.json
+  shell: "cat {{ oai_path }}/rhcos.json"
   register: result
 
 - name: save the result data to a Variable as a Fact
@@ -56,7 +56,7 @@
       - {
           "openshift_version": "{{ ocp_major }}",
           "cpu_architecture": "x86_64",
-          "url": "http://{{ ansible_default_ipv4.address }}:8080/rhcos-live.x86_64.iso",
+          "url": "http://{{ ansible_default_ipv4.address }}:8008/rhcos-live.x86_64.iso",
           "version": "{{ rhcos_release }}"
         }
   when: oai_disconnected == "true"
@@ -98,23 +98,45 @@
 - name: "Template a file to {{ oai_path }}/configmap.yml"
   ansible.builtin.template:
     src: configmap.yaml.j2
-    dest: "{{ oai_path }}/configmap.yml
+    dest: "{{ oai_path }}/configmap.yml"
   when: oai_disconnected == "false"
 
 - name: "Template a file to {{ oai_path }}/configmap.yml"
   ansible.builtin.template:
     src: configmap-disconnected.yaml.j2
-    dest: "{{ oai_path }}/configmap.yml
+    dest: "{{ oai_path }}/configmap.yml"
   when: oai_disconnected == "true"
 
 - name: "Template a file to {{ oai_path }}/pod.yml"
   ansible.builtin.template:
     src: pod.yaml.j2
-    dest: "{{ oai_path }}/pod.yml
+    dest: "{{ oai_path }}/pod.yml"
   when: oai_disconnected == "false"
 
 - name: "Template a file to {{ oai_path }}/pod.yml"
   ansible.builtin.template:
     src: pod-disconnected.yaml.j2
-    dest: "{{ oai_path }}/pod.yml
+    dest: "{{ oai_path }}/pod.yml"
   when: oai_disconnected == "true"
+
+- name: Add ports to firewall
+  firewalld:
+    port: "{{ item }}"
+    state: enabled
+    immediate: true
+    permanent: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3.6
+  register: ports_added_to_firewalld
+  loop:
+    - "8080/tcp"
+    - "8090/tcp"
+    - "8888/tcp"
+
+- name: "Ports Added"
+  debug:
+    var: ports_added_to_firewalld
+
+- name: Started assisted installer
+  shell: "podman play kube --configmap {{ oai_path }}/configmap.yml {{ oai_path }}/pod.yml"
+
