@@ -1,0 +1,32 @@
+- name: Display the JSON file content
+  shell: "cat {{ mirror_registry_secret }}"
+  register: result
+
+- name: save the result data to a Variable as a Fact
+  set_fact:
+    pull_secret: "{{ result.stdout }}"
+
+- name: parse the Json data to a Variable as a Fact
+  set_fact:
+    registry_auth:
+      - {
+           "auths": {
+             "{{ ansible_default_ipv4.address }}:8443": { 
+               "auth": "{{ (mirror_registry_user + ':' + mirror_registry_password) | b64encode }}", 
+               "email": "admin@example.com"
+             }
+           }
+        } 
+
+- name: "Mirror json"
+  debug:
+    msg:
+      - "pull-secret ............ {{ pull_secret }}"
+      - "registry auth .......... {{ registry_auth }}"
+      - "merge .................. {{ pull_secret | combine(registry_auth) }}"
+
+#- name: "Install mirror-registry"
+#  command: "./mirror-registry install --initUser {{ mirror_registry_user }} --initPassword {{ mirror_registry_password }} --quayHostname {{ ansible_nodename }} --quayRoot {{ mirror_registry_path }}/quay"
+#  args:
+#    chdir: "{{ mirror_registry_path }}"
+

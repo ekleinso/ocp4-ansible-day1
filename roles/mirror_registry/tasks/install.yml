@@ -1,0 +1,48 @@
+- name: "Create directory for mirror-registry"
+  file:
+    path: "{{ mirror_registry_path }}"
+    state: directory
+
+- name: "Download mirror-registry"
+  get_url:
+    url: "{{ mirror_registry_package }}"
+    dest: "{{ mirror_registry_path }}/mirror-registry.tar.gz"
+    mode: '0644'
+
+- name: "Extract mirror-registry"
+  ansible.builtin.unarchive:
+    src: "{{ mirror_registry_path }}/mirror-registry.tar.gz"
+    dest: "{{ mirror_registry_path }}"
+
+- name: "Remove file"
+  ansible.builtin.file:
+    path: "{{ mirror_registry_path }}/mirror-registry.tar.gz"
+    state: absent
+
+- name: "Install mirror-registry"
+  command: "./mirror-registry install --initUser {{ mirror_registry_user }} --initPassword {{ mirror_registry_password }} --quayHostname {{ ansible_nodename }} --quayRoot {{ mirror_registry_path }}/quay"
+  args:
+    chdir: "{{ mirror_registry_path }}"
+
+- name: Add ports to firewall
+  firewalld:
+    port: "8443/tcp"
+    state: enabled
+    immediate: true
+    permanent: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3.6
+  register: ports_added_to_firewalld
+
+- name: "Ports Added"
+  debug:
+    var: ports_added_to_firewalld
+
+- name: "OpenShift Mirror registry details"
+  debug:
+    msg:
+      - "Mirror-registry .............. https://{{ ansible_nodename }}:8443"
+      - "User ......................... {{ mirror_registry_user }}"
+      - "Password ..................... {{ mirror_registry_password }}"
+      - "Certificate .................. {{ mirror_registry_path }}/quay/quay-rootCA/rootCA.pem }}"
+
