@@ -35,9 +35,9 @@ data:
   STORAGE: filesystem
   ENABLE_UPGRADE_AGENT: "false"
 {% if oai_disconnected == "true" %}
-  AGENT_DOCKER_IMAGE: "{{ ansible_fqdn }}:8443/ocp4/edge-infrastructure/assisted-installer-agent:latest"
-  CONTROLLER_IMAGE: "{{ ansible_fqdn }}:8443/ocp4/edge-infrastructure/assisted-installer-controller:latest"
-  INSTALLER_IMAGE: "{{ ansible_fqdn }}:8443/ocp4/edge-infrastructure/assisted-installer:latest"
+  AGENT_DOCKER_IMAGE: "{{ ansible_fqdn }}:8443/ibm/edge-infrastructure/assisted-installer-agent:latest"
+  CONTROLLER_IMAGE: "{{ ansible_fqdn }}:8443/ibm/edge-infrastructure/assisted-installer-controller:latest"
+  INSTALLER_IMAGE: "{{ ansible_fqdn }}:8443/ibm/edge-infrastructure/assisted-installer:latest"
 
   registries.conf: |
     unqualified-search-registries = ["registry.access.redhat.com", "docker.io"]
@@ -46,13 +46,13 @@ data:
         location = "quay.io/openshift-release-dev/ocp-release"
         mirror-by-digest-only = true
         [[registry.mirror]]
-        location = "{{ ansible_fqdn }}:8443/ocp4/openshift/release-images"
+        location = "{{ ansible_fqdn }}:8443/ibm/openshift/release-images"
     [[registry]]
         prefix = ""
         location = "quay.io/openshift-release-dev/ocp-v4.0-art-dev"
         mirror-by-digest-only = true
         [[registry.mirror]]
-        location = "{{ ansible_fqdn }}:8443/ocp4/openshift/release"
+        location = "{{ ansible_fqdn }}:8443/ibm/openshift/release"
   tls-ca-bundle.pem: |
 {% filter indent(width=4) %}
     {{ lookup('file', oai_registry_certificate) }}

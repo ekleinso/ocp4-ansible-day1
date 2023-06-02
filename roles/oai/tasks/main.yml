@@ -108,7 +108,7 @@
           "cpu_architectures": [
             "x86_64"
           ],
-          "url": "{{ ansible_fqdn }}:8443/ocp4/openshift/release-images:{{ ocp_minor }}-x86_64",
+          "url": "{{ ansible_fqdn }}:8443/ibm/openshift/release-images:{{ ocp_minor }}-x86_64",
           "version": "{{ ocp_minor }}"
         }
   when: oai_disconnected == "true"
