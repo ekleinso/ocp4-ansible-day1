@@ -1,6 +1,14 @@
 # ocp4-ansible-day1
 This is an ansible repository that configures a bastion/day1 host for installing OpenShift. 
 
+## Prerequisite
+A workstation or VM with RHEL 8 and Ansible installed. 
+Minimum specification
+- 2 vCPU
+- 4GB RAM
+- 200GB Disk
+
+## Install instructions
 To install in Ansible 2.10 or greater use ansible-galaxy and install directly from git.
 ```shell
 ansible-galaxy collection install https://github.com/ekleinso/ocp4-ansible-day1.git
