@@ -45,4 +45,3 @@
       - "User ......................... {{ mirror_registry_user }}"
       - "Password ..................... {{ mirror_registry_password }}"
       - "Certificate .................. {{ mirror_registry_path }}/quay/quay-rootCA/rootCA.pem }}"
-

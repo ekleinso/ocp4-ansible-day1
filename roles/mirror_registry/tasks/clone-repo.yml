@@ -17,8 +17,30 @@
       - "registry auth .......... {{ registry_auth }}"
       - "merge .................. {{ pull_secret | combine(registry_auth | items2dict) }}"
 
-#- name: "Install mirror-registry"
-#  command: "./mirror-registry install --initUser {{ mirror_registry_user }} --initPassword {{ mirror_registry_password }} --quayHostname {{ ansible_nodename }} --quayRoot {{ mirror_registry_path }}/quay"
-#  args:
-#    chdir: "{{ mirror_registry_path }}"
+- name: "Get OpenShift Version"
+  shell: "openshift-install version | grep '^openshift-install' | awk '{print $2}'"
+  register: openshift_version
+
+- name: parse the OpenShift version data to variables as facts
+  set_fact:
+    ocp_major: "{{ openshift_version.stdout.split('.')[:2] | join('.') }}"
+    ocp_minor: "{{ openshift_version.stdout }}"
+
+- name: "OpenShift details"
+  debug:
+    msg:
+      - "OpenShift Version ...... {{ ocp_major }}"
+      - "OpenShift Major ........ {{ ocp_minor }}"
+
+- name: "Template a file to {{ oai_path }}/configmap.yml"
+  ansible.builtin.template:
+    src: imagesetconfig.yaml.j2
+    dest: "{{ mirror_registry_path }}/imagesetconfig.yaml"
+
+# ToDo - add task to copy pull-secret to $XDG_RUNTIME_DIR/containers/auth.json
+
+- name: "Mirror images"
+  command: "oc mirror --skip-cleanup --dest-skip-tls --config imagesetconfig.yaml docker://{{ ansible_host }}:8443/ibm"
+  args:
+    chdir: "{{ mirror_registry_path }}"
 

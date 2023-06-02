@@ -3,6 +3,30 @@
     path: "{{ oai_path }}"
     state: directory
 
+- name: Create private key (RSA, 4096 bits)
+  community.crypto.openssl_privatekey:
+    path: "{{ oai_path }}/tls.key"
+
+- name: Create certificate signing request (CSR) for self-signed certificate
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "{{ oai_path }}/tls.key"
+    common_name: "{{ ansible_fqdn }}"
+    organization_name: Compu-Global-Hyper-Mega-Net
+    subject_alt_name:
+      - "DNS:{{ ansible_fqdn }}"
+      - "IP:{{ ansible_default_ipv4.address }}"
+    basic_constraints:
+      - 'CA:TRUE'
+    basic_constraints_critical: true
+  register: csr
+
+- name: Create simple self-signed certificate
+  community.crypto.x509_certificate:
+    path: "{{ oai_path }}/tls.crt"
+    csr_content: "{{ csr.csr }}"
+    privatekey_path: "{{ oai_path }}/tls.key"
+    provider: selfsigned
+
 - name: "Get OpenShift COMMIT_ID"
   shell: "openshift-install version | grep '^built from commit' | awk '{print $4}'"
   register: commit_id
@@ -11,7 +35,7 @@
   shell: "openshift-install version | grep '^openshift-install' | awk '{print $2}'"
   register: openshift_version
 
-- name: "OpenShift Assisted Installer details"
+- name: "OpenShift Installer details"
   debug:
     msg:
       - "COMMIT_ID .............. {{ commit_id.stdout }}"
@@ -50,7 +74,7 @@
         }
   when: oai_disconnected == "false"
 
-- name: "Create os_images data DISCONNECTED"
+- name: "DISCONNECTED - Create os_images data"
   set_fact:
     os_images: 
       - {
@@ -75,7 +99,7 @@
         }
   when: oai_disconnected == "false"
 
-- name: "Create os_releases data DISCONNECTED"
+- name: "DISCONNECTED - Create os_releases data"
   set_fact:
     os_releases: 
       - {
@@ -84,7 +108,7 @@
           "cpu_architectures": [
             "x86_64"
           ],
-          "url": "{{ ansible_default_ipv4.address }}:8443/ocp4/openshift4:{{ ocp_minor }}-x86_64",
+          "url": "{{ ansible_fqdn }}:8443/ocp4/openshift/release-images:{{ ocp_minor }}-x86_64",
           "version": "{{ ocp_minor }}"
         }
   when: oai_disconnected == "true"
@@ -97,27 +121,13 @@
 
 - name: "Template a file to {{ oai_path }}/configmap.yml"
   ansible.builtin.template:
-    src: configmap.yaml.j2
+    src: configmap.yml.j2
     dest: "{{ oai_path }}/configmap.yml"
-  when: oai_disconnected == "false"
-
-- name: "Template a file to {{ oai_path }}/configmap.yml"
-  ansible.builtin.template:
-    src: configmap-disconnected.yaml.j2
-    dest: "{{ oai_path }}/configmap.yml"
-  when: oai_disconnected == "true"
 
 - name: "Template a file to {{ oai_path }}/pod.yml"
   ansible.builtin.template:
-    src: pod.yaml.j2
+    src: "pod.yml.j2"
     dest: "{{ oai_path }}/pod.yml"
-  when: oai_disconnected == "false"
-
-- name: "Template a file to {{ oai_path }}/pod.yml"
-  ansible.builtin.template:
-    src: pod-disconnected.yaml.j2
-    dest: "{{ oai_path }}/pod.yml"
-  when: oai_disconnected == "true"
 
 - name: Add ports to firewall
   firewalld:
@@ -140,3 +150,8 @@
 - name: Started assisted installer
   shell: "podman play kube --configmap {{ oai_path }}/configmap.yml {{ oai_path }}/pod.yml"
 
+- name: "OpenShift Assisted Installer details"
+  debug:
+    msg:
+      - "Mirror-registry .............. https://{{ ansible_fqdn }}:8080"
+      - "Certificate .................. {{ oai_path }}/tls.crt }}"

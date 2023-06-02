@@ -1,4 +1,4 @@
-ansible_version_check
+ocp_tools
 ======================
 
 Internal-use role that all other roles in the collection declare a dependency upon to ensure that the minimum supported level of Ansible is used.

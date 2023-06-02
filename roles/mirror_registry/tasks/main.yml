@@ -1,6 +1,6 @@
 ---
 # tasks file for mirror registry
 
-#- include_tasks: install.yml
+- include_tasks: install.yml
 - include_tasks: clone-repo.yml
-
+  when: clone_repo == "true"

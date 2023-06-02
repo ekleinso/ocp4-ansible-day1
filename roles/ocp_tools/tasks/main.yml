@@ -1,6 +1,6 @@
 - name: "Download clients"
   get_url:
-    url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-{{ ocp_version }}/{{ item }}"
+    url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-{{ item }}"
     dest: "/tmp/{{ item }}"
     mode: '0644'
   with_items: "{{ ocp_clients }}"
