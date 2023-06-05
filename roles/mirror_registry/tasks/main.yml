@@ -1,6 +1,11 @@
 ---
 # tasks file for mirror registry
 
-- include_tasks: install.yml
+- include_tasks: install-quay.yml
+  when: mirror_registry == "quay"
+
+- include_tasks: install-registry.yml
+  when: mirror_registry == "docker"
+
 - include_tasks: clone-repo.yml
   when: clone_repo == "true"

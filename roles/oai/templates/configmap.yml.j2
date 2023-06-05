@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
   name: config
 data:
-  ASSISTED_SERVICE_URL: https://127.0.0.1:8090
-  ASSISTED_SERVICE_HOST: 127.0.0.1:8090
+  ASSISTED_SERVICE_URL: https://{{ ansible_default_ipv4.address }}:8090
+  ASSISTED_SERVICE_HOST: {{ ansible_default_ipv4.address }}:8090
   ASSISTED_SERVICE_SCHEME: https
   AUTH_TYPE: none
   DB_HOST: 127.0.0.1
