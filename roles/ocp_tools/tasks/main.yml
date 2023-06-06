@@ -1,13 +1,13 @@
 - name: "Download clients"
   get_url:
-    url: "https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-{{ item }}"
-    dest: "/tmp/{{ item }}"
+    url: "{{ item.value }}/{{ item.name }}"
+    dest: "/tmp/{{ item.name }}"
     mode: '0644'
   with_items: "{{ ocp_clients }}"
 
 - name: "Extract into /usr/local/bin"
   ansible.builtin.unarchive:
-    src: "/tmp/{{ item }}"
+    src: "/tmp/{{ item.name }}"
     dest: /usr/local/bin
   with_items: "{{ ocp_clients }}"
 
@@ -20,7 +20,7 @@
 
 - name: "Remove file"
   ansible.builtin.file:
-    path: "/tmp/{{ item }}"
+    path: "/tmp/{{ item.name }}"
     state: absent
   with_items: "{{ ocp_clients }}"
 

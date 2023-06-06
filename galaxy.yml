@@ -19,5 +19,3 @@ repository: https://github.com/ekleinso/ocp4-ansible-day1
 documentation: https://github.com/ekleinso/ocp4-ansible-day1
 homepage: https://github.com/ekleinso/ocp4-ansible-day1
 issues: https://github.com/ekleinso/ocp4-ansible-day1/issues
-build_ignore: []
-

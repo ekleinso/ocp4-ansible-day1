@@ -3,14 +3,12 @@
 
 ocp_version: "{{ lookup('env', 'OCP_VERSION') | default('4.10', true) }}"
 
-ocp_client_version: "{{ lookup('env', 'OCP_CLIENT_VERSION') | default('4.12', true) }}"
-
 ocp_clients:
-  - "{{ ocp_client_version }}/openshift-client-linux.tar.gz"
-  - "{{ ocp_version }}/openshift-install-linux.tar.gz"
-  - "{{ ocp_client_version }}/oc-mirror.tar.gz"
-  - "{{ ocp_client_version }}/opm-linux.tar.gz"
-  - "{{ ocp_client_version }}/ccoctl-linux.tar.gz"
+  - { name: "openshift-install-linux.tar.gz", value: "https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-{{ ocp_version }}" }
+  - { name: "openshift-client-linux.tar.gz", value: "https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable" }
+  - { name: "oc-mirror.tar.gz", value: "https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable" }
+  - { name: "opm-linux.tar.gz", value: "https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable" }
+  - { name: "ccoctl-linux.tar.gz", value: "https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable" }
 
 ocp_deps:
   - "rhcos-live.x86_64.iso"
