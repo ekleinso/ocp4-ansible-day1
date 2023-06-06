@@ -56,6 +56,6 @@
   debug:
     msg:
       - "pull-secret .......................... {{ registry_auth }}"
-      - "community-operator-index Catalog ..... {{ mirror_registry_path }}/results-*/catalogSource-community-operator-index.yaml"
-      - "redhat-operator-index Catalog ........ {{ mirror_registry_path }}/results-*/catalogSource-redhat-operator-index.yaml"
-      - "iImageContentSourcePolicy ............ {{ mirror_registry_path }}/results-*/imageContentSourcePolicy.yaml"
+      - "community-operator-index Catalog ..... {{ mirror_registry_path }}/oc-mirror-workspace/results-*/catalogSource-community-operator-index.yaml"
+      - "redhat-operator-index Catalog ........ {{ mirror_registry_path }}/oc-mirror-workspace/results-*/catalogSource-redhat-operator-index.yaml"
+      - "iImageContentSourcePolicy ............ {{ mirror_registry_path }}/oc-mirror-workspace/results-*/imageContentSourcePolicy.yaml"
