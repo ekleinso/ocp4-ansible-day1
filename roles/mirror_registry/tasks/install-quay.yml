@@ -40,11 +40,9 @@
 
 - name: "Copy certificates"
   copy:
-    src: "{{ mirror_registry_path }}/quay/quay-rootCA/rootCA.pem }}"
+    src: "{{ mirror_registry_path }}/quay/quay-rootCA/rootCA.pem"
     dest: /etc/pki/ca-trust/source/anchors
-  retries: 10
-  delay: 10
-
+  
 - name: "Trust certificates"
   command: update-ca-trust
 

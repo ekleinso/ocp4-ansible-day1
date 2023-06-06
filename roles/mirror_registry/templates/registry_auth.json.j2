@@ -1,6 +1,6 @@
 {
   "auths": {
-    "{{ ansible_default_ipv4.address }}:8443": { 
+    "{{ ansible_fqdn }}:8443": { 
       "auth": "{{ (mirror_registry_user + ':' + mirror_registry_password) | b64encode }}", 
       "email": "admin@repo.local"
     }

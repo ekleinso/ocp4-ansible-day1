@@ -52,6 +52,14 @@
   debug:
     var: ports_added_to_firewalld
 
+- name: "Copy certificates"
+  copy:
+    src: "{{ mirror_registry_path }}/certs/registry.crt"
+    dest: /etc/pki/ca-trust/source/anchors
+  
+- name: "Trust certificates"
+  command: update-ca-trust
+
 - name: "OpenShift Mirror registry details"
   debug:
     msg:

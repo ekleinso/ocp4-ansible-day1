@@ -37,7 +37,15 @@
     src: imagesetconfig.yaml.j2
     dest: "{{ mirror_registry_path }}/imagesetconfig.yaml"
 
-# ToDo - add task to copy pull-secret to $XDG_RUNTIME_DIR/containers/auth.json
+- name: "Create directory $XDG_RUNTIME_DIR/containers"
+  file:
+    path: "{{ lookup('env', 'XDG_RUNTIME_DIR') }}/containers/"
+    state: directory
+
+- name: "Copy merged pull secret"
+  copy:
+    src: "{{ pull_secret | combine(registry_auth | items2dict) }}"
+    dest: "{{ lookup('env', 'XDG_RUNTIME_DIR') }}/containers/auth.json"
 
 - name: "Mirror images"
   command: "oc mirror --skip-cleanup --dest-skip-tls --config imagesetconfig.yaml docker://{{ ansible_host }}:8443/ibm"
