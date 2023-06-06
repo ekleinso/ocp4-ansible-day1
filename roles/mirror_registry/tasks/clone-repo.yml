@@ -1,16 +1,16 @@
-- name: Display the JSON file content
+- name: Get the pull-secret file content
   shell: "cat {{ mirror_registry_secret }}"
   register: result
 
-- name: save the result data to a Variable as a Fact
+- name: Save the result data to a Variable as a Fact
   set_fact:
     pull_secret: "{{ result.stdout }}"
 
-- name: parse the Json data to a Variable as a Fact
+- name: Create pull-secret for mirror repository
   set_fact:
     registry_auth: "{{ lookup('template', 'registry_auth.json.j2') }}"
 
-- name: "Mirror json"
+- name: "Mirror pull-secret json"
   debug:
     msg:
       - "pull-secret ............ {{ pull_secret }}"
@@ -32,7 +32,7 @@
       - "OpenShift Version ...... {{ ocp_major }}"
       - "OpenShift Major ........ {{ ocp_minor }}"
 
-- name: "Template a file to {{ oai_path }}/configmap.yml"
+- name: "Template a file to {{ mirror_registry_path }}/imagesetconfig.yaml"
   ansible.builtin.template:
     src: imagesetconfig.yaml.j2
     dest: "{{ mirror_registry_path }}/imagesetconfig.yaml"
@@ -42,13 +42,20 @@
     path: "{{ lookup('env', 'XDG_RUNTIME_DIR') }}/containers/"
     state: directory
 
-- name: "Copy merged pull secret"
+- name: "Copy merged pull secret to $XDG_RUNTIME_DIR/containers"
   copy:
-    src: "{{ pull_secret | combine(registry_auth, recursive=true) }}"
+    content: "{{ pull_secret | combine(registry_auth, recursive=true) }}"
     dest: "{{ lookup('env', 'XDG_RUNTIME_DIR') }}/containers/auth.json"
 
-- name: "Mirror images"
-  command: "oc mirror --skip-cleanup --dest-skip-tls --config imagesetconfig.yaml docker://{{ ansible_host }}:8443/ibm"
+- name: "Mirror images :: oc mirror --skip-cleanup --dest-skip-tls --config imagesetconfig.yaml docker://{{ ansible_fqdn }}:8443/ibm"
+  command: "oc mirror --skip-cleanup --dest-skip-tls --config imagesetconfig.yaml docker://{{ ansible_fqdn }}:8443/ibm"
   args:
     chdir: "{{ mirror_registry_path }}"
 
+- name: "OpenShift Info"
+  debug:
+    msg:
+      - "pull-secret .......................... {{ registry_auth }}"
+      - "community-operator-index Catalog ..... {{ mirror_registry_path }}/results-*/catalogSource-community-operator-index.yaml"
+      - "redhat-operator-index Catalog ........ {{ mirror_registry_path }}/results-*/catalogSource-redhat-operator-index.yaml"
+      - "iImageContentSourcePolicy ............ {{ mirror_registry_path }}/results-*/imageContentSourcePolicy.yaml"
