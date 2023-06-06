@@ -15,7 +15,7 @@
     msg:
       - "pull-secret ............ {{ pull_secret }}"
       - "registry auth .......... {{ registry_auth }}"
-      - "merge .................. {{ pull_secret | combine(registry_auth | items2dict) }}"
+      - "merged ................. {{ pull_secret | combine(registry_auth, recursive=true) }}"
 
 - name: "Get OpenShift Version"
   shell: "openshift-install version | grep '^openshift-install' | awk '{print $2}'"
@@ -44,7 +44,7 @@
 
 - name: "Copy merged pull secret"
   copy:
-    src: "{{ pull_secret | combine(registry_auth | items2dict) }}"
+    src: "{{ pull_secret | combine(registry_auth, recursive=true) }}"
     dest: "{{ lookup('env', 'XDG_RUNTIME_DIR') }}/containers/auth.json"
 
 - name: "Mirror images"
