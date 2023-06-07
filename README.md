@@ -36,3 +36,8 @@ Create a playbook to invoke the Ansible roles
    - ibmce.ocp_day1.mirror_registry
    - ibmce.ocp_day1.oai
 ```
+
+Run the playbook
+```shell
+ansible-playbook playbook/sample.yml
+```
