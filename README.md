@@ -4,8 +4,8 @@ This is an ansible repository that configures a bastion/day1 host for installing
 ## Prerequisite
 A workstation or VM with RHEL 8 and Ansible installed. 
 Minimum specification
-- 2 vCPU
-- 4GB RAM
+- 4 vCPU
+- 8GB RAM
 - 200GB Disk
 
 ## Install instructions

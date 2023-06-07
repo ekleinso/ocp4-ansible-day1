@@ -47,6 +47,11 @@
     content: "{{ pull_secret | combine(registry_auth, recursive=true) }}"
     dest: "{{ lookup('env', 'XDG_RUNTIME_DIR') }}/containers/auth.json"
 
+- name: "Copy pull secret to {{ mirror_registry_path }}/pull-secret"
+  copy:
+    content: "{{ registry_auth }}"
+    dest: "{{ mirror_registry_path }}/pull-secret"
+
 - name: "Mirror images :: oc mirror --skip-cleanup --dest-skip-tls --config imagesetconfig.yaml docker://{{ ansible_fqdn }}:8443/ibm"
   command: "oc mirror --skip-cleanup --dest-skip-tls --config imagesetconfig.yaml docker://{{ ansible_fqdn }}:8443/ibm"
   args:
