@@ -30,7 +30,6 @@ data:
   POSTGRESQL_PASSWORD: admin
   POSTGRESQL_USER: admin
   PUBLIC_CONTAINER_REGISTRIES: 'quay.io'
-  PULL_SECRET_FILE: "/tmp/pull-secret"
   RELEASE_IMAGES: '{{ os_releases | to_json }}'
   SERVICE_BASE_URL: "https://{{ ansible_fqdn }}:8090"
   SKIP_CERT_VERIFICATION: "true"
@@ -68,8 +67,4 @@ data:
   tls.crt: |-
 {% filter indent(width=4) %}
     {{ lookup('file', oai_certificate) }}
-{% endfilter %}
-  pull-secret: |-
-{% filter indent(width=4) %}
-    {{ lookup("file", oai_pull_secret) }}
 {% endfilter %}

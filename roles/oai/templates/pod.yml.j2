@@ -52,8 +52,6 @@ spec:
         name: ai-data
       - mountPath: /etc/certs
         name: certs-configmap-volume
-      - mountPath: /tmp
-        name: pull-secret-volume
 {% if oai_disconnected == "true" %}
       - mountPath: /etc/pki/ca-trust/extracted/pem
         subPath: tls-ca-bundle.pem
@@ -78,13 +76,6 @@ spec:
             path: tls.key
           - key: tls.crt
             path: tls.crt
-    - name: pull-secret-volume
-      configMap:
-        name: config
-        defaultMode: 420
-        items:
-          - key: pull-secret
-            path: pull-secret
 {% if oai_disconnected == "true" %}
     - name: mirror-registry-config
       configMap:
