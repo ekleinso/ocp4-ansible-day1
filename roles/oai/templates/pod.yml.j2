@@ -46,11 +46,11 @@ spec:
     volumeMounts:
       - mountPath: /data
         name: ai-data
-      - mountPath: /etc/containers
-        name: mirror-registry-config
       - mountPath: /etc/certs
         name: certs-configmap-volume
 {% if oai_disconnected == "true" %}
+      - mountPath: /etc/containers
+        name: mirror-registry-config
       - mountPath: /etc/pki/ca-trust/extracted/pem
         subPath: tls-ca-bundle.pem
         name: mirror-registry-config
