@@ -56,6 +56,8 @@ data:
   tls-ca-bundle.pem: |
 {% filter indent(width=4) %}
     {{ lookup('file', oai_registry_certificate) }}
+{% endfilter %}
+{% filter indent(width=4) %}
     {{ lookup('file', oai_certificate) }}
 {% endfilter %}
 {% endif %}
