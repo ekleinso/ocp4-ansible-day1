@@ -26,6 +26,8 @@ spec:
     volumeMounts:
     - name: certs-configmap-volume
       mountPath: /etc/certs
+    - mountPath: /tmp
+      name: pull-secret-volume
   - image: quay.io/edge-infrastructure/assisted-image-service:latest
     name: image-service
     ports:
@@ -36,6 +38,8 @@ spec:
     volumeMounts:
     - name: certs-configmap-volume
       mountPath: /etc/certs
+    - mountPath: /tmp
+      name: pull-secret-volume
   - image: quay.io/edge-infrastructure/assisted-service:latest
     name: service
     ports:
@@ -48,10 +52,12 @@ spec:
         name: ai-data
       - mountPath: /etc/certs
         name: certs-configmap-volume
+      - mountPath: /tmp
+        name: pull-secret-volume
+{% if oai_disconnected == "true" %}
       - mountPath: /etc/pki/ca-trust/extracted/pem
         subPath: tls-ca-bundle.pem
         name: mirror-registry-config
-{% if oai_disconnected == "true" %}
       - mountPath: /etc/containers
         name: mirror-registry-config
 {% endif %}
@@ -72,6 +78,14 @@ spec:
             path: tls.key
           - key: tls.crt
             path: tls.crt
+    - name: pull-secret-volume
+      configMap:
+        name: config
+        defaultMode: 420
+        items:
+          - key: pull-secret
+            path: pull-secret
+{% if oai_disconnected == "true" %}
     - name: mirror-registry-config
       configMap:
         name: config
@@ -79,7 +93,6 @@ spec:
         items:
           - key: tls-ca-bundle.pem
             path: tls-ca-bundle.pem
-{% if oai_disconnected == "true" %}
           - key: registries.conf
             path: registries.conf
 {% endif %}
