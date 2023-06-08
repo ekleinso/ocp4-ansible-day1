@@ -26,8 +26,6 @@ spec:
     volumeMounts:
     - name: certs-configmap-volume
       mountPath: /etc/certs
-    - mountPath: /tmp
-      name: pull-secret-volume
   - image: quay.io/edge-infrastructure/assisted-image-service:latest
     name: image-service
     ports:
@@ -38,8 +36,6 @@ spec:
     volumeMounts:
     - name: certs-configmap-volume
       mountPath: /etc/certs
-    - mountPath: /tmp
-      name: pull-secret-volume
   - image: quay.io/edge-infrastructure/assisted-service:latest
     name: service
     ports:
