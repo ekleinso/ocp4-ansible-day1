@@ -63,7 +63,6 @@ data:
 {% filter indent(width=4) %}
     {{ lookup('file', oai_certificate) }}
 {% endfilter %}
-{% endif %}
   tls.key: |
 {% filter indent(width=4) %}
     {{ lookup('file', oai_key) }}
