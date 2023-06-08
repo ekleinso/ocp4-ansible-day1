@@ -53,10 +53,13 @@ data:
         mirror-by-digest-only = true
         [[registry.mirror]]
         location = "{{ ansible_fqdn }}:8443/ibm/openshift/release"
+{% endif %}
   tls-ca-bundle.pem: |
+{% if oai_disconnected == "true" %}
 {% filter indent(width=4) %}
     {{ lookup('file', oai_registry_certificate) }}
 {% endfilter %}
+{% endif %}
 {% filter indent(width=4) %}
     {{ lookup('file', oai_certificate) }}
 {% endfilter %}
