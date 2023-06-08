@@ -1,7 +1,7 @@
-ansible_version_check
+httpd
 ======================
 
-Internal-use role that all other roles in the collection declare a dependency upon to ensure that the minimum supported level of Ansible is used.
+Installs Apache Web Server for serving images in air-gap environments.
 
 License
 -------

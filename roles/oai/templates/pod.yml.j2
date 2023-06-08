@@ -48,11 +48,11 @@ spec:
         name: ai-data
       - mountPath: /etc/certs
         name: certs-configmap-volume
-{% if oai_disconnected == "true" %}
-      - mountPath: /etc/containers
-        name: mirror-registry-config
       - mountPath: /etc/pki/ca-trust/extracted/pem
         subPath: tls-ca-bundle.pem
+        name: mirror-registry-config
+{% if oai_disconnected == "true" %}
+      - mountPath: /etc/containers
         name: mirror-registry-config
 {% endif %}
   restartPolicy: Never
@@ -72,14 +72,14 @@ spec:
             path: tls.key
           - key: tls.crt
             path: tls.crt
-{% if oai_disconnected == "true" %}
     - name: mirror-registry-config
       configMap:
         name: config
         defaultMode: 420
         items:
-          - key: registries.conf
-            path: registries.conf
           - key: tls-ca-bundle.pem
             path: tls-ca-bundle.pem
+{% if oai_disconnected == "true" %}
+          - key: registries.conf
+            path: registries.conf
 {% endif %}

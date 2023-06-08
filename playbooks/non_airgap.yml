@@ -1,0 +1,9 @@
+---
+- name: Deploy day1 for connected environment
+  gather_facts: yes
+  hosts: localhost
+
+  roles:
+   - ibmce.ocp_day1.os_prereq
+   - ibmce.ocp_day1.ocp_tools
+   - ibmce.ocp_day1.oai

@@ -1,0 +1,13 @@
+---
+- name: Deploy day1 for airgap
+  gather_facts: yes
+  hosts: localhost
+  vars:
+    oai_disconnected: true
+
+  roles:
+   - ibmce.ocp_day1.os_prereq
+   - ibmce.ocp_day1.httpd
+   - ibmce.ocp_day1.ocp_tools
+   - ibmce.ocp_day1.mirror_registry
+   - ibmce.ocp_day1.oai
