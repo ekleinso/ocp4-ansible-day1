@@ -1,5 +1,6 @@
 ---
 # defaults file for httpd
+clone_repo: "{{ lookup('env', 'CLONE_REPO') | default('false', true) }}"
 
 mirror_registry: "{{ lookup('env', 'MIRROR_REGISTRY') | default('quay', true) }}"
 mirror_registry_package: "{{ lookup('env', 'MIRROR_REGISTRY_PACKAGE') | default('https://mirror.openshift.com/pub/openshift-v4/clients/mirror-registry/latest/mirror-registry.tar.gz', true) }}"
@@ -8,4 +9,10 @@ mirror_registry_user: "{{ lookup('env', 'MIRROR_REGISTRY_USER') | default('admin
 mirror_registry_password: "{{ lookup('env', 'MIRROR_REGISTRY_PASSWORD') | default('Passw0rd', true) }}"
 mirror_registry_secret: "{{ lookup('env', 'MIRROR_REGISTRY_SECRET') | default('pull-secret', true) }}"
 
-clone_repo: "{{ lookup('env', 'CLONE_REPO') | default('false', true) }}"
+mirror_registry_packages: 
+   - "registry.redhat.io/ubi8/ubi:latest"
+   - "quay.io/edge-infrastructure/assisted-installer-agent:latest"
+   - "quay.io/edge-infrastructure/assisted-installer-controller:latest"
+   - "quay.io/edge-infrastructure/assisted-installer:latest"
+   - "k8s.gcr.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2"
+   - "registry.redhat.io/rhel8/support-tools:latest"
