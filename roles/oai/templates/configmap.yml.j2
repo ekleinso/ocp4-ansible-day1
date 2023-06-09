@@ -54,12 +54,6 @@ data:
         mirror-by-digest-only = true
         [[registry.mirror]]
         location = "{{ ansible_fqdn }}:8443/ibm/openshift/release"
-    [[registry]]
-        prefix = ""
-        location = "registry.redhat.io/redhat/"
-        mirror-by-digest-only = false
-        [[registry.mirror]]
-        location = "{{ ansible_fqdn }}:8443/ibm/redhat/"
 
   tls-ca-bundle.pem: |
 {% filter indent(width=4) %}
