@@ -3,7 +3,7 @@
   gather_facts: yes
   hosts: localhost
   vars:
-    oai_disconnected: true
+    oai_disconnected: "true"
     ocp_version: 4.12
     clone_repo: "true"
     mirror_registry_secret: "/root/pull-secret"
