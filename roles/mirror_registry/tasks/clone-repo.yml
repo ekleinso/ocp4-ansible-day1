@@ -64,5 +64,5 @@
       - "community-operator-index Catalog ..... {{ mirror_registry_path }}/oc-mirror-workspace/results-*/catalogSource-community-operator-index.yaml"
       - "redhat-operator-index Catalog ........ {{ mirror_registry_path }}/oc-mirror-workspace/results-*/catalogSource-redhat-operator-index.yaml"
       - "ImageContentSourcePolicy ............. {{ mirror_registry_path }}/oc-mirror-workspace/results-*/imageContentSourcePolicy.yaml"
-      - "registry-cas ConfigMap ............... oc create configmap registry-cas -n openshift-config --from-file=day1.ocpxe.jadek.com..8443={{ mirror_registry_path }}/quay/quay-rootCA/rootCA.pem"
+      - "registry-cas ConfigMap ............... oc create configmap registry-cas -n openshift-config --from-file={{ ansible_fqdn }}..8443={{ mirror_registry_path }}/quay/quay-rootCA/rootCA.pem"
       - "Patch image config ................... oc patch image.config.openshift.io/cluster --patch '{\"spec\":{\"additionalTrustedCA\":{\"name\":\"registry-cas\"}}}' --type=merge"
